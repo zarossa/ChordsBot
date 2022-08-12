@@ -1,16 +1,15 @@
-# This is a sample Python script.
+import requests
+import lxml.html
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+def parse(url):
+    api = requests.get(url)
+    tree = lxml.html.document_fromstring(api.text)
+    text = tree.xpath('/html/body/div[2]/article/div//div/pre')
+    print(text[0].text_content())
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+def main():
+    parse('https://amdm.ru/akkordi/la_rue_morgue/150160/sigues_dando_vueltas/')
 
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    main()
