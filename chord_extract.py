@@ -4,16 +4,17 @@ import lxml.html
 
 def parse(url_address):
     api = requests.get(url_address)
-    tree = lxml.html.document_fromstring(api.text)
+    print(api)
+    tree = lxml.html.fromstring(api.text)
     text = tree.xpath('/html/body/div[2]/article/div//div/pre')
-    print(text[0].text_content())
+    return text[0].text_content().replace('\t', '            ')
 
 
-url = 'https://amdm.ru/akkordi/la_rue_morgue/150160/sigues_dando_vueltas/'
+url = 'https://amdm.ru/akkordi/5nizza/11554/pyatnica/'
 
 
 def main():
-    parse(url)
+    return parse(url)
 
 
 if __name__ == '__main__':

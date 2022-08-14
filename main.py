@@ -1,7 +1,8 @@
 import telebot
 from telebot import types
+import chord_extract
 
-with open("passcode.txt", 'r') as text:
+with open("passcode.tx", 'r') as text:
     passcode = text.readline()
 bot = telebot.TeleBot(passcode)
 
@@ -10,14 +11,15 @@ bot = telebot.TeleBot(passcode)
 def start(message):
     mess = 'Привет, <b>{name} {lastname}</b>'.format(name=message.from_user.first_name,
                                                      lastname=message.from_user.last_name)
+    mess2 = 'Поиск песни (по названию, исполнителю):'
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
     btn1 = types.KeyboardButton('Hello, bot!')
     btn2 = types.KeyboardButton('My ID')
     btn3 = types.KeyboardButton('Links')
-    btn4 = types.KeyboardButton('Photo')
+    btn4 = types.KeyboardButton('Chords')
     markup.add(btn1, btn2, btn3, btn4)
-    bot.send_message(message.chat.id, mess, parse_mode='html', reply_markup=markup)
-
+    bot.send_message(message.chat.id, mess, parse_mode='html')#, reply_markup=markup)
+    bot.send_message(message.chat.id, mess2, parse_mode='html')
 
 @bot.message_handler(content_types=['photo'])
 def get_user_photo(message):
@@ -54,10 +56,9 @@ def get_user_text(message):
             bot.send_message(message.chat.id,
                              '{}, your ID is {}'.format(message.from_user.first_name, message.from_user.id),
                              parse_mode='html')
-        elif text_message == 'photo':
-            photo = open('photo.jpg', 'rb')
-            bot.send_message(message.chat.id, 'Just a random photo from my computer:', parse_mode='html')
-            bot.send_photo(message.chat.id, photo)
+        elif text_message == 'chords':
+            chords = chord_extract.main()
+            bot.send_message(message.chat.id, chords, parse_mode='html')
         elif text_message == 'google':
             markup_text = types.InlineKeyboardMarkup()
             markup_text.add(types.InlineKeyboardButton('Go to Google', url='https://google.com'))
