@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 #*.tx
 #*.jpg
+=======
+#*.txt
+#*.jpg
+#*.webp
+>>>>>>> 93770a47109d7f5112444ab8dd4fcb9028f49263
 #Procfile
