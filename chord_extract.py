@@ -4,7 +4,6 @@ import lxml.html
 
 def parse(url_address):
     api = requests.get(url_address)
-    print(api)
     tree = lxml.html.fromstring(api.text)
     text = tree.xpath('/html/body/div[2]/article/div//div/pre')
     return text[0].text_content().replace('\t', '            ')

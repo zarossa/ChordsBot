@@ -18,7 +18,7 @@ def start(message):
     btn3 = types.KeyboardButton('Links')
     btn4 = types.KeyboardButton('Chords')
     markup.add(btn1, btn2, btn3, btn4)
-    bot.send_message(message.chat.id, mess, parse_mode='html')#, reply_markup=markup)
+    bot.send_message(message.chat.id, mess, parse_mode='html', reply_markup=markup)
     bot.send_message(message.chat.id, mess2, parse_mode='html')
 
 @bot.message_handler(content_types=['photo'])
