@@ -1,40 +1,38 @@
 import requests
 import lxml.html
-from lxml import etree
 
 
 def parse(url_address):
+    # Подготовка списка песен
     api = requests.get(url_address).text
     tree = lxml.html.fromstring(api)
     return tree.xpath('//tr/td[@class="artist_name"]')
 
 
-
 def url_maker():
+    # Создание поисковой ссылки
     text = input().split()
     return 'https://amdm.ru/search/?q=' + '+'.join(text)
 
 
-def main():
-    return parse(url_maker())
+def listpart_print(songlist, k):
+    # Вывод 5 строк из списка песен
+    for i in range(len(songlist)):
+        print((i + 1) + (k * 5), songlist[i].text_content(), songlist[i][1].attrib['href'])
+    print('here')
 
-songlist = main()
-k = 0
-while True:
-    for i in range(k * 5, (k + 1) * 5):
-        print(i + 1, songlist[i].text_content(), songlist[i][1].attrib['href'])
-    if k != 3:
-        if input('Next?(y/n)\n') == 'y':
-            k += 1
-        else:
-            break
-    else:
-        break
-# k = 0
-# while True:
-#     if __name__ == '__main__':
-#         main()
-#     if input('More?\n') == 'y':
-#         k += 1
-#     else:
-#         break
+def list_print(songlist):
+    # Вывод списка песен
+    if len(songlist) == 0:
+        return 'Ничего не найдено'
+    for k in range(len(songlist) // 5):
+        listpart_print(songlist[k * 5:(k + 1) * 5], k)
+        if k != (len(songlist) // 5 - 1):
+            if input('Загрузить еще?\n') == 'n':
+                break
+    if len(songlist) % 5:
+        listpart_print(songlist[len(songlist) // 5 * 5: len(songlist)], len(songlist) // 5)
+
+
+songlist = parse(url_maker())
+print(list_print(songlist))
