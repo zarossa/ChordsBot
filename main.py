@@ -1,6 +1,7 @@
 import telebot
 from telebot import types
 import chord_extract
+import song_search
 
 with open("passcode.tx", 'r') as text:
     passcode = text.readline()
@@ -18,27 +19,29 @@ def start(message):
     btn3 = types.KeyboardButton('Links')
     btn4 = types.KeyboardButton('Chords')
     markup.add(btn1, btn2, btn3, btn4)
-    bot.send_message(message.chat.id, mess, parse_mode='html', reply_markup=markup)
+    bot.send_message(message.chat.id, mess, parse_mode='html')#, reply_markup=markup)
     bot.send_message(message.chat.id, mess2, parse_mode='html')
 
-@bot.message_handler(content_types=['photo'])
-def get_user_photo(message):
-    bot.send_message(message.chat.id, 'Excellent photo!')
+# @bot.message_handler(content_types=['photo'])
+# def get_user_photo(message):
+#     bot.send_message(message.chat.id, 'Excellent photo!')
 
 
 @bot.message_handler(content_types=['text'])
 def get_user_text(message):
     text_message = message.text.lower()
-    if text_message == 'links':
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
-        btn1 = types.KeyboardButton('Google')
-        btn2 = types.KeyboardButton('YouTube')
-        btn3 = types.KeyboardButton('CodeWars')
-        btn4 = types.KeyboardButton('КиноПоиск')
-        btn5 = types.KeyboardButton('Back')
-        markup.add(btn1, btn2, btn3, btn4, btn5)
-        final_message = 'Choose website:'
-        bot.send_message(message.chat.id, final_message, parse_mode='html', reply_markup=markup)
+    if text_message[0] != '_':
+        songlist = song_search.listmake(text_message)
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+        k = 0
+        songs = song_search.listpart_print(songlist[k * 5:(k + 1) * 5], k)
+        for i in range(len(songs)):
+            songs[i] = types.KeyboardButton(songs[i])
+        markup.add(songs[0], songs[1], songs[2], songs[3], songs[4])
+        bot.send_message(message.chat.id, 'Песни', parse_mode='html', reply_markup=markup)
+        # chords = chord_extract.main(url)
+        # bot.send_message(message.chat.id, chords, parse_mode='html')
+
 
     elif text_message == 'back':
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
