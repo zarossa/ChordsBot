@@ -4,7 +4,7 @@ import chord_extract
 import song_search
 import re
 
-with open("passcode_main.txt", 'r') as text:
+with open("passcode_test.txt", 'r') as text:
     passcode = text.readline()
 bot = telebot.TeleBot(passcode)
 
