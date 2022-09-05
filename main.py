@@ -21,20 +21,21 @@ def start(message):
                                                                                 message.chat.id))  # Интерфейс для вывода ошибок
 
 
-songlist = []
+song_list_by_user = {}
+song_list = []
 
 
 @bot.message_handler(content_types=['text'])
 def get_user_text(message):
     text_message = message.text.lower()
-    global songlist
+    global song_list_by_user
     if not re.fullmatch(r'\b[\d_].*', text_message):
         # Если отправленный текст начинается с буквы, начать поиск песни
-        songlist = song_search.listmake(text_message)
-        if len(songlist) > 4:
+        song_list_by_user[message.chat.id] = song_search.listmake(text_message)
+        if len(song_list_by_user[message.chat.id]) > 4:
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
             k = 0
-            songs_name = song_search.listpart_print(songlist[k * 5:(k + 1) * 5], k)
+            songs_name = song_search.listpart_print(song_list_by_user[message.chat.id][k * 5:(k + 1) * 5], k)
             songs_name = [types.KeyboardButton(songs_name[i]) for i in range(len(songs_name))]
             markup.add(songs_name[0], songs_name[1], songs_name[2], songs_name[3], songs_name[4])
             bot.send_message(message.chat.id, 'Песни', parse_mode='html', reply_markup=markup)
@@ -44,9 +45,7 @@ def get_user_text(message):
     elif re.fullmatch(r'\b\d.*', text_message):
         # Если отправленный текст начинается с цифры, произвести вывод аккордов
         num = int(text_message[0]) - 1
-        print(songlist[num][1].attrib['href'], num, songlist[num].text_content())
-
-        chords = chord_extract.main(songlist[num][1].attrib['href'])
+        chords = chord_extract.main(song_list_by_user[message.chat.id][num][1].attrib['href'])
         bot.send_message(message.chat.id, chords, parse_mode='html')
 
     elif re.fullmatch(r'\b_.*', text_message):
