@@ -9,9 +9,6 @@ def parse(url):
     return text[0].text_content().replace('\t', '            ')
 
 
-# url = 'https://amdm.ru/akkordi/5nizza/11554/pyatnica/'
-
-
 def main(url):
     return parse(url)
 

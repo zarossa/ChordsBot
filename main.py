@@ -4,7 +4,7 @@ import chord_extract
 import song_search
 import re
 
-with open("passcode.tx", 'r') as text:
+with open("passcode_main.txt", 'r') as text:
     passcode = text.readline()
 bot = telebot.TeleBot(passcode)
 
@@ -12,7 +12,7 @@ bot = telebot.TeleBot(passcode)
 @bot.message_handler(commands=['start'])
 def start(message):
     # Вывод приветственного сообщения при старте бота
-    mess = 'Привет, <b>{name} {lastname}</b>'.format(name=message.from_user.first_name,
+    mess = 'Привет, {name} {lastname}'.format(name=message.from_user.first_name,
                                                      lastname=message.from_user.last_name)
     mess2 = 'Поиск песни (по названию, исполнителю):'
     bot.send_message(message.chat.id, mess, parse_mode='html')
