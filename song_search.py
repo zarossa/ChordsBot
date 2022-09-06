@@ -19,7 +19,7 @@ def listmake(text):
 def listpart_print(songlist, k):
     # Вывод 5 строк из списка песен
     partlist = ['{}. {}'.format((i + 1) + (k * 5), songlist[i].text_content()) for i in range(len(songlist))]
-    return partlist # , songlist[i][1].attrib['href'])
+    return partlist
 
 
 def list_print(songlist):
