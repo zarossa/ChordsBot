@@ -9,11 +9,6 @@ with open("passcode_test.txt", 'r') as text:
 bot = telebot.TeleBot(passcode)
 
 
-def unpacker(cont):
-    if len(cont) > 4:
-        return cont[0], cont[1], cont[2], cont[3], cont[4]
-
-
 @bot.message_handler(commands=['start'])
 def start(message):
     # Вывод приветственного сообщения при старте бота
@@ -59,7 +54,9 @@ def get_user_text(message):
         # Если отправленный текст начинается с цифры, произвести вывод аккордов
         num = int(text_message[0]) - 1
         chords = chord_extract.main(song_list_by_user[message.chat.id][num][1].attrib['href'])
-        bot.send_message(message.chat.id, chords, parse_mode='html')
+        chords = chord_extract.splitter(chords)
+        for i in range(len(chords)):
+            bot.send_message(message.chat.id, chords[i], parse_mode='html')
 
     elif re.fullmatch(r'\b_.*', text_message):
         # Если отправленный текст начинается с "_", начать работу с командами
